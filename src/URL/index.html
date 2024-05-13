@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data URL</title>
+</head>
+
+<body>
+    <div>
+        <input type="file" id="file">
+    </div>
+    <div>
+        <img id="imgPreview" width="300" />
+        <img id="imgPreview2" width="300" />
+    </div>
+    <script>
+        const file = document.querySelector('#file');
+        const imgPreview = document.querySelector('#imgPreview');
+        const imgPreview2 = document.querySelector('#imgPreview2');
+        file.onchange = function (e) {
+            console.log(e.target.files[0])
+            const objURL = URL.createObjectURL(e.target.files[0]);
+            console.log(objURL, "<--------createObjectURL");
+            imgPreview.src = objURL;
+            // URL.revokeObjectURL(objURL);
+
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const data = e.target.result;
+                console.log(data, "<---------FileReader result")
+                imgPreview2.src = data;
+            }
+            reader.readAsDataURL(file.files[0])
+        }
+    </script>
+</body>
+
+
+</html>
