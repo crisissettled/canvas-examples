@@ -45,7 +45,6 @@ function setImgPreview(imgFile) {
       const originImgSrc = reader.result;
       const compressedImgSrc = await createCompressedImage({
         imgSrc: originImgSrc,
-        quality,
         type: imgFile.type,
       });
 
@@ -53,12 +52,14 @@ function setImgPreview(imgFile) {
       oCompressedImgPreview.src = compressedImgSrc;
       setPreviewImgVisible(oOriginImgPreview, true);
       setPreviewImgVisible(oCompressedImgPreview, true);
+
+      //   console.log(compressedImgSrc.length, originImgSrc.length, quality);
     };
     reader.readAsDataURL(imgFile);
   }
 }
 
-function createCompressedImage({ imgSrc, quality, type }) {
+function createCompressedImage({ imgSrc, type }) {
   const oCan = document.createElement("canvas");
   const oImg = document.createElement("img");
   const ctx = oCan.getContext("2d");
@@ -74,11 +75,25 @@ function createCompressedImage({ imgSrc, quality, type }) {
       oCan.height = imgHeight;
       ctx.drawImage(oImg, 0, 0, imgWidth, imgHeight);
 
-      const compressedImgSrc = oCan.toDataURL(type, quality / 100);
-
+      const compressedImgSrc = doCompress(oCan, imgSrc, type);
       resolve(compressedImgSrc);
     };
   });
+}
+
+function doCompress(canvas, imgSrc, type) {
+  const compressedImgSrc = canvas.toDataURL(type, quality / 100);
+  if (compressedImgSrc.length >= imgSrc.length) {
+    if (quality > 10) {
+      quality -= 10;
+    } else if (quality > 1) {
+      quality -= 1;
+    }
+
+    doCompress(canvas, imgSrc, type);
+  } else {
+    return compressedImgSrc;
+  }
 }
 
 function setPreviewImgVisible(element, visible) {
