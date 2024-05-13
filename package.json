@@ -1,0 +1,16 @@
+{
+  "name": "canvas-examples",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite --port 8791"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "yarn@4.2.2",
+  "dependencies": {
+    "vite": "^5.2.11"
+  }
+}
