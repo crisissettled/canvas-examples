@@ -1,0 +1,60 @@
+body {
+    margin: 0;
+}
+
+input,button {
+    outline: none;
+    border: none;
+    vertical-align: middle;   
+    box-sizing: border-box;
+}
+
+.container {
+    width: 1000px;
+    margin: 0 auto;
+    margin-top: 3rem;
+}
+
+.video-wrapper {
+    position: relative;
+}
+
+.video-wrapper video {
+    border-radius: 5px;
+    width: 100%; 
+}
+
+.video-wrapper canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;    
+    height: 100%;    
+}
+
+.container .tool-box {
+    margin-top: 1rem;
+    height: 38px;
+}
+
+.container input,
+.container button {
+    height: 100%;
+    margin-right: 15px;
+    border-radius: 5px;
+}
+
+.container .bchat-input {
+    width: 300px;
+    border: 1px solid #ccc;
+}
+
+.container .bchat-btn {
+    color: #fff;
+    background-color: orange;
+}
+
+.container .color-input {
+    border: 2px solid rgb(233 214 195);
+    width: 45px;
+}
