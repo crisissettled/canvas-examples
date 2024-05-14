@@ -1,14 +1,14 @@
 const oContainer = document.querySelector(".canvas-container");
-const oContainer2 = document.querySelector(".canvas2-container");
+const oCanPreviewContainer = document.querySelector(".canvasPreview-container");
 const oImgeFile = document.getElementById("imageFile");
 const oCan = document.getElementById("can");
-const oCan2 = document.getElementById("can2");
+const oCanPreview = document.getElementById("canPreview");
 const ctx = oCan.getContext("2d", { willReadFrequently: true });
-const ctx2 = oCan2.getContext("2d", { willReadFrequently: true });
+const ctxPreview = oCanPreview.getContext("2d", { willReadFrequently: true });
 
 const oImage = new Image();
 let initPos = [];
-let screenShotData = [];
+let screenShotGeoData = [];
 const MASK_OPACITY = 0.5;
 
 const init = () => {
@@ -18,8 +18,6 @@ const init = () => {
 function bindEvent() {
   oImgeFile.addEventListener("change", handleFileChange, false);
   oCan.addEventListener("mousedown", handleCanvasMouseDown, false);
-
-  // oCan.addEventListener("click", handleCanvasClick, false);
 }
 
 function handleFileChange(e) {
@@ -39,14 +37,6 @@ function handleFileChange(e) {
   };
 }
 
-function handleCanvasClick() {
-  const { width, height } = oCan;
-  console.log(oCan, "oCan");
-  ctx.clearRect(0, 0, width, height);
-  // ctx.drawImage(oImage, 0, 0, width, height);
-  //drawImageMask(0, 0, width, height, MASK_OPACITY);
-}
-
 function handleCanvasMouseDown(e) {
   initPos = [e.offsetX, e.offsetY];
 
@@ -62,29 +52,17 @@ function handleCanvasMouseMove(e) {
   const rectHeight = endY - startY;
 
   const { width, height } = oCan;
-
-  screenShotData = [startX, startY, rectWidth, rectHeight];
-
-  // console.log(rectHeight, rectWidth)
+  screenShotGeoData = [startX, startY, rectWidth, rectHeight];
 
   ctx.clearRect(0, 0, width, height);
   drawImageMask(0, 0, width, height, MASK_OPACITY);
   drawScreenShot(width, height, rectWidth, rectHeight);
 }
 
-function drawScreenShot(canWidth, canHeight, rectWidth, rectHeight) {
-  ctx.globalCompositeOperation = "destination-out";
-  ctx.fillStyle = "#000";
-  ctx.fillRect(...initPos, rectWidth, rectHeight);
-
-  ctx.globalCompositeOperation = "destination-over";
-  ctx.drawImage(oImage, 0, 0, canWidth, canHeight, 0, 0, canWidth, canHeight);
-}
-
 function handleCanvasMouseUp(e) {
   oCan.removeEventListener("mousemove", handleCanvasMouseMove, false);
   oCan.removeEventListener("mouseup", handleCanvasMouseUp, false);
-  drawScreenShotImage(screenShotData);
+  drawScreenShotImage(screenShotGeoData);
 }
 
 function generateCanvas(container, canvas, width, height) {
@@ -100,11 +78,25 @@ function drawImageMask(x, y, width, height, opacity) {
   ctx.fillRect(x, y, width, height);
 }
 
-function drawScreenShotImage(screenShotData) {
-  const data = ctx.getImageData(...screenShotData);
-  generateCanvas(oContainer2, oCan2, screenShotData[2], screenShotData[3]);
-  ctx2.clearRect(...screenShotData);
-  ctx2.putImageData(data, 0, 0);
+function drawScreenShot(canWidth, canHeight, rectWidth, rectHeight) {
+  ctx.globalCompositeOperation = "destination-out";
+  ctx.fillStyle = "#000";
+  ctx.fillRect(...initPos, rectWidth, rectHeight);
+
+  ctx.globalCompositeOperation = "destination-over";
+  ctx.drawImage(oImage, 0, 0, canWidth, canHeight, 0, 0, canWidth, canHeight);
+}
+
+function drawScreenShotImage(screenShotGeoData) {
+  const data = ctx.getImageData(...screenShotGeoData);
+  generateCanvas(
+    oCanPreviewContainer,
+    oCanPreview,
+    screenShotGeoData[2],
+    screenShotGeoData[3]
+  );
+  ctxPreview.clearRect(...screenShotGeoData);
+  ctxPreview.putImageData(data, 0, 0);
 }
 
 init();
