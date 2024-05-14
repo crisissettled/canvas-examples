@@ -8,7 +8,7 @@ const ctxPreview = oCanPreview.getContext("2d", { willReadFrequently: true });
 
 const oImage = new Image();
 let initPos = [];
-let screenShotGeoData = [];
+let screenShotGeomData = [];
 const MASK_OPACITY = 0.5;
 
 const init = () => {
@@ -52,7 +52,7 @@ function handleCanvasMouseMove(e) {
   const rectHeight = endY - startY;
 
   const { width, height } = oCan;
-  screenShotGeoData = [startX, startY, rectWidth, rectHeight];
+  screenShotGeomData = [startX, startY, rectWidth, rectHeight];
 
   ctx.clearRect(0, 0, width, height);
   drawImageMask(0, 0, width, height, MASK_OPACITY);
@@ -62,7 +62,7 @@ function handleCanvasMouseMove(e) {
 function handleCanvasMouseUp(e) {
   oCan.removeEventListener("mousemove", handleCanvasMouseMove, false);
   oCan.removeEventListener("mouseup", handleCanvasMouseUp, false);
-  drawScreenShotImage(screenShotGeoData);
+  drawScreenShotImage(screenShotGeomData);
 }
 
 function generateCanvas(container, canvas, width, height) {
@@ -87,15 +87,15 @@ function drawScreenShot(canWidth, canHeight, rectWidth, rectHeight) {
   ctx.drawImage(oImage, 0, 0, canWidth, canHeight, 0, 0, canWidth, canHeight);
 }
 
-function drawScreenShotImage(screenShotGeoData) {
-  const data = ctx.getImageData(...screenShotGeoData);
+function drawScreenShotImage(screenShotGeomData) {
+  const data = ctx.getImageData(...screenShotGeomData);
   generateCanvas(
     oCanPreviewContainer,
     oCanPreview,
-    screenShotGeoData[2],
-    screenShotGeoData[3]
+    screenShotGeomData[2],
+    screenShotGeomData[3]
   );
-  ctxPreview.clearRect(...screenShotGeoData);
+  ctxPreview.clearRect(...screenShotGeomData);
   ctxPreview.putImageData(data, 0, 0);
 }
 
